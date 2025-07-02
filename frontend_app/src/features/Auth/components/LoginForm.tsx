@@ -13,6 +13,7 @@ export const LoginForm = () => {
         const response = await loginAPI(data);
         console.log(response);
 
+
         /*
         * Дальнейшие действия невозможны
         * Нужна документация по api
