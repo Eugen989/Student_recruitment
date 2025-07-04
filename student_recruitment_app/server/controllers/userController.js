@@ -10,16 +10,18 @@ const generateJWT = (id, email, login, role) => {
 class UserController {
     async registration(req, res, next) {
         let {email, login, password, role} = req.body;
-        if(!email || !login || !password) return next(ApiError.badRequest("Некоректный email, login или password"));
+        if(!email || !login || !password) return next(ApiError.unauthorized("Некоректный email, login или password"));
         role = role || "guest";
 
-        const candidate = await User.findOne({where: {email}});
+        let candidate = await User.findOne({where: {login}});
+        if(candidate) return next(ApiError.badRequest("Пользователь с таким login уже существует"));
+        candidate = await User.findOne({where: {email}});
         if(candidate) return next(ApiError.badRequest("Пользователь с таким email уже существует"));
         
         const hashPassword = await bcrypt.hash(password, 2);
         const user = await User.create({email, login, password: hashPassword, role});
 
-        const token = generateJWT(user.id, email, login, password, role);
+        const token = generateJWT(user.id, email, login, role);
 
         return res.json({token});
     }
@@ -37,9 +39,27 @@ class UserController {
         return res.json({token});
     }
 
+    async getAll(req, res, next) {
+        try {
+            const users = await User.findAll({});
+            return res.json({users});
+        } catch (error) {
+            console.error(error);
+            return next(ApiError.internal("Не получилось передать данные о пользователях"));
+        }
+    }
+
     async check(req, res, next) {
-        // const {id} = req.query;
-        res.json({ message: "all ok" });
+        const {email, login, password} = req.body;
+        let user = await User.findOne({where: {email, login}})
+        if(!user) return next(ApiError.notFound("Пользователь не найден"));
+
+        let comparePassword = bcrypt.compareSync(password, user.password);
+        if(!comparePassword) return next(ApiError.unauthorized("Указан неверный пароль"));
+
+        const token = generateJWT(user.id, user.email, user.login, user.role)
+
+        return res.json({token});
     }
 }
 
