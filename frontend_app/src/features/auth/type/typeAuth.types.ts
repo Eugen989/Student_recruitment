@@ -20,6 +20,16 @@ export interface ResponseRegisterData {
     error?: ApiError;
 }
 
+export interface RequestLoginData {
+    login: string;
+    password: string;
+}
+
+export interface ResponseLoginData {
+    token?: string;
+    error?: ApiError;
+}
+
 export interface ButtonAuthProps {
     children: ReactNode | string;
     className?: string;
