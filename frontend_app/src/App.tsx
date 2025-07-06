@@ -1,10 +1,9 @@
-//import {SignUpForm} from "./features/Auth/components/SignUpForm.tsx";
-import {LoginForm} from "./features/Auth/components/LoginForm.tsx";
+import {AppRouter} from "./app/router/AppRouter.tsx";
 
 const App = () => {
     return (
         <>
-            <LoginForm/>
+            <AppRouter/>
         </>
     )
 }

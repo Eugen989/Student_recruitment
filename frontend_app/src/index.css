@@ -1,1 +1,23 @@
 @import "tailwindcss";
+
+@theme {
+    --color-*: initial;
+    --color-white-10: #ffffff;
+    --color-white-20: #E0E5FF;
+    --color-white-30: #EEF1FF;
+    --color-black-10: #000000;
+    --color-black-20: #444444;
+    --color-black-30: #00000040;
+    --color-blue-10: #344BC3;
+    --color-purple-10: #8A38F5;
+    --color-purple-20: #A4B3FF;
+    --color-gray-10: #8D8D8D;
+    --color-gray-20: #CCCCCC;
+    --color-red-10: #FF4545;
+
+    --shadow-auth: 4px 4px 4px 0 var(--color-black-30);
+}
+
+:root {
+    color: var(--color-black-20);
+}
