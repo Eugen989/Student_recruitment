@@ -16,6 +16,9 @@
     --color-red-10: #FF4545;
 
     --shadow-auth: 4px 4px 4px 0 var(--color-black-30);
+    --shadow-search: 0px 4px 4px 0 var(--color-black-30);
+    --shadow-card: 0px 4px 10px 0 var(--color-black-30);
+    --shadow-toast: 0px 6px 5px 0 var(--color-black-30);
 }
 
 :root {
@@ -26,7 +29,40 @@ html, body, #root {
     height: 100vh;
 }
 
+body {
+    background: var(--color-white-20);
+}
+
 #root {
     display: flex;
     flex-direction: column;
+}
+
+input[type="range"] {
+    -webkit-appearance: none;
+    height: 2px;
+    background: var(--color-purple-20);
+}
+
+input[type="range"]::-moz-range-track {
+    height: 2px;
+    background: var(--color-purple-20);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-blue-10);
+    cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-blue-10);
+    border: none;
+    cursor: pointer;
 }

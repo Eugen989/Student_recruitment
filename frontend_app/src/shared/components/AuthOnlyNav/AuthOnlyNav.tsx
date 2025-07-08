@@ -3,23 +3,15 @@ import {Link} from "react-router-dom";
 export const AuthOnlyNav = () => {
     return (
         <div className="flex items-center gap-4">
-            <div
-                className="
-                relative
-                group
-                cursor-pointer
-                ">
+            <div className="relative group cursor-pointer">
+                {/* Иконка уведомлений */}
                 <svg
                     width="41"
                     height="46"
                     viewBox="0 0 41 46"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
-                    className="
-                    cursor-pointer
-                    fill-blue-10
-                    group-hover:fill-purple-20
-                    transition duration-300 ease-in-out"
+                    className="cursor-pointer fill-blue-10 group-hover:fill-purple-20 transition duration-300 ease-in-out"
                 >
                     <path
                         d="M20.125 0C18.5348 0 17.25 1.28477 17.25 2.875V4.6C10.6914 5.92969
@@ -34,19 +26,50 @@ export const AuthOnlyNav = () => {
                         45.398 18.5976 46 20.125 46C21.6523 46 23.1168 45.398 24.1949 44.3199Z"
                     />
                 </svg>
-                <span
-                    className="
+
+                {/* Бейдж с количеством уведомлений */}
+                <span className="
                     absolute top-0 right-0
                     text-white-10 font-extrabold text-[10px]
                     bg-red-10 rounded-full
                     w-4 h-4
                     flex items-center justify-center
-                    group-hover:scale-150 group-hover:font-extrabold
+                    group-hover:scale-150
                     transition duration-300 ease-in-out"
                 >
                     1
                 </span>
+
+                {/* Toast-уведомление - исправленная часть */}
+                <div className="
+                    flex flex-col gap-2.5
+                    absolute z-20 top-full right-0 mt-2
+                    text-sm shadow-toast
+                    min-w-[220px] w-full max-w-xs
+                    bg-white-10 rounded-2xl p-3.5
+                    opacity-0 invisible
+                    group-hover:opacity-100 group-hover:visible
+                    transition-all duration-300
+                    transform -translate-y-1 group-hover:translate-y-0"
+                >
+                    <span className="text-gray-10">
+                        У вас новое сообщение
+                    </span>
+                    <Link
+                        to="/chat"
+                        className="
+                            text-white-10 bg-blue-10
+                            rounded-[10px] py-2 px-4
+                            text-center
+                            hover:bg-purple-20
+                            transition duration-300 ease-in-out"
+                    >
+                        Ответить
+                    </Link>
+                </div>
             </div>
+
+            {/* Профиль пользователя */}
             <div className="flex items-center gap-x-3.5">
                 <div className="text-sm font-medium text-right max-w-20 w-full">
                     Андрей Васильев
@@ -72,7 +95,6 @@ export const AuthOnlyNav = () => {
                             17.8125C32.5 13.4978 29.0022 10 24.6875 10Z"
                         />
                     </svg>
-
                 </Link>
             </div>
         </div>

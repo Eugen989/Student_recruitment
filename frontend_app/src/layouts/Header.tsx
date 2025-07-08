@@ -6,8 +6,8 @@ import {AuthOnlyNav} from "../shared/components/AuthOnlyNav/AuthOnlyNav.tsx";
 
 export const Header = ({links}: {links: LinkItem[]}) => {
     return (
-        <header className="px-3 py-4">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+        <header className="px-3 py-4 bg-white-10">
+            <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-6">
                     <Link to="/" className="flex items-center gap-4">
                         <div className="logo">
