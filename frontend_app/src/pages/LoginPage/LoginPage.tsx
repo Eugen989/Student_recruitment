@@ -4,7 +4,7 @@ import {LoginForm} from "../../features/auth/components/LoginForm.tsx";
 
 export const LoginPage = () => {
     return (
-        <div className="flex justify-center items-center min-h-screen bg-white-20">
+        <div className="flex justify-center items-center min-h-screen">
             <div className="
                 max-w-[700px] w-full
                 mx-auto
@@ -28,13 +28,27 @@ export const LoginPage = () => {
                 <div className="flex justify-between items-center mt-10 font-semibold">
                     <span className="block text-gray-10 text-center">
                         Нет аккаунта?
-                        <Link to={'/register'} className="text-blue-10 ml-1 hover:underline">
+                        <Link
+                            to={'/register'}
+                            className="
+                            text-blue-10 font-semibold
+                            ml-1
+                            hover:underline hover:text-purple-20
+                            transition duration-300 ease-in-out"
+                        >
                             Регистрация
                         </Link>
                     </span>
                     <span className="block text-gray-10 text-center">
                         Забыли пароль?
-                        <Link to={'/login'} className="text-blue-10 ml-1 hover:underline">
+                        <Link
+                            to={'/login'}
+                            className="
+                            text-blue-10 font-semibold
+                            ml-1
+                            hover:underline hover:text-purple-20
+                            transition duration-300 ease-in-out"
+                        >
                             Восстановить
                         </Link>
                     </span>

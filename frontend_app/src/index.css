@@ -21,3 +21,12 @@
 :root {
     color: var(--color-black-20);
 }
+
+html, body, #root {
+    height: 100vh;
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+}

@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 
 export const RegisterPage = () => {
     return (
-        <div className="flex justify-center items-center min-h-screen bg-white-20">
+        <div className="flex justify-center items-center min-h-screen">
             <div className="
                 max-w-[700px] w-full
                 mx-auto
@@ -27,7 +27,14 @@ export const RegisterPage = () => {
                 <RegisterForm/>
                 <span className="block text-gray-10 text-center mt-10 font-semibold">
                     Уже есть аккаунт?
-                    <Link to={'/login'} className="text-blue-10 ml-1 hover:underline">
+                    <Link
+                        to={'/login'}
+                        className="
+                            text-blue-10 font-semibold
+                            ml-1
+                            hover:underline hover:text-purple-20
+                            transition duration-300 ease-in-out"
+                    >
                         Войти
                     </Link>
                 </span>

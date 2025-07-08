@@ -38,7 +38,7 @@ export const ToggleRadioInput = (
                         ${classNameLabel}
                         w-full py-1.5
                         flex items-center justify-center
-                        rounded-lg
+                        rounded-xl
                         cursor-pointer
                         transition-colors duration-200 ease-in-out
                         ${checkedValue === 'student' ? 'bg-purple-20 text-white-10' : ''}
