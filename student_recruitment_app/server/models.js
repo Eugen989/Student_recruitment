@@ -13,7 +13,7 @@ const User = sequelize.define("user", {
 
 const Teg = sequelize.define("teg", {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    name: {type: DataTypes.STRING, allowNull: false},
+    name: {type: DataTypes.STRING, allowNull: false, unique: true},
 })
 
 const Project = sequelize.define("project", {
@@ -24,34 +24,74 @@ const Project = sequelize.define("project", {
     link: {type: DataTypes.STRING}
 })
 
-const Portfolio = sequelize.define("protfolio", {
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    userId: {type: DataTypes.INTEGER, references: { model: User, key: 'id' }, allowNull: false},
-    salary: {type: DataTypes.INTEGER},
-    tegs_id: { 
+const Portfolio = sequelize.define("portfolio", {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    userId: { type: DataTypes.INTEGER, references: { model: User, key: 'id' }, allowNull: false },
+    salary: { type: DataTypes.INTEGER },
+    tegs_id: {
         type: DataTypes.ARRAY(DataTypes.INTEGER),
-        references: {
-            model: Teg,
-            key: 'id'
-        }
     },
-    projects_id: { 
+    projects_id: {
         type: DataTypes.ARRAY(DataTypes.INTEGER),
-        references: {
-            model: Project,
-            key: 'id'
-        }
     },
-    description: {type: DataTypes.TEXT},
+    description: { type: DataTypes.TEXT },
+});
+
+const websiteMail = sequelize.define("websiteMail", {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    firstUserId: { type: DataTypes.INTEGER, references: { model: User, key: 'id' }, allowNull: false },
+    secondUserId: { type: DataTypes.INTEGER, references: { model: User, key: 'id' }, allowNull: false },
+    title: { type: DataTypes.STRING },
+    message: { type: DataTypes.TEXT },
+    viewed: {type: DataTypes.BOOLEAN, defaultValue: false},
+});
+
+const Chat = sequelize.define("chat", {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    usersID: {
+        type: DataTypes.ARRAY(DataTypes.INTEGER),
+    },
+    chatMessagesId: {
+        type: DataTypes.ARRAY(DataTypes.INTEGER),
+    }
 })
 
-Portfolio.belongsTo(User, { foreignKey: 'userId' });
-Portfolio.belongsToMany(Teg, { foreignKey: 'tegId' });
-Portfolio.belongsToMany(Project, { foreignKey: 'projectId' });
+const ChatMessage = sequelize.define("chatMessage", {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    userId: { type: DataTypes.INTEGER, references: { model: User, key: 'id' }, allowNull: false },
+    message: { type: DataTypes.TEXT },
+    viewed: {type: DataTypes.BOOLEAN, defaultValue: false},
+})
+
+
+const PortfolioTeg = sequelize.define('PortfolioTeg', {});
+const PortfolioProject = sequelize.define('PortfolioProject', {});
+
+Portfolio.belongsToMany(Teg, { through: PortfolioTeg });
+Teg.belongsToMany(Portfolio, { through: PortfolioTeg });
+
+Portfolio.belongsToMany(Project, { through: PortfolioProject });
+Project.belongsToMany(Portfolio, { through: PortfolioProject });
+
+websiteMail.belongsTo(User, { foreignKey: 'firstUserId', as: 'firstUser' });
+websiteMail.belongsTo(User, { foreignKey: 'secondUserId', as: 'secondUser' });
+
+Chat.belongsToMany(User, { through: 'ChatUsers', foreignKey: 'chatId' });
+User.belongsToMany(Chat, { through: 'ChatUsers', foreignKey: 'userId' });
+
+Chat.hasMany(ChatMessage, { foreignKey: 'chatId' });
+ChatMessage.belongsTo(Chat, { foreignKey: 'chatId' });
+
+ChatMessage.belongsTo(User, { foreignKey: 'userId' });
 
 module.exports = {
     User,
     Teg,
     Project,
     Portfolio,
+    PortfolioTeg,
+    PortfolioProject,
+    websiteMail,
+    Chat,
+    ChatMessage
 }

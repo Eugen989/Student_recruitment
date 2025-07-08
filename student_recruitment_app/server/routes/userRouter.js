@@ -3,6 +3,8 @@ const router = new Router;
 const userController = require("../controllers/userController");
 const authMiddleware = require("../middleware/authMiddleware");
 
+// roles ("guest", "student", "employer", "admin")
+
 router.post("/registration", userController.registration);
 router.post("/login", userController.login);
 router.get("/getAll", userController.getAll);
