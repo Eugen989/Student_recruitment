@@ -140,28 +140,28 @@ class ChatController {
     }
 
     async getAllChatMessages(req, res, next) {
-    const {chatId} = req.query;
+        const {chatId} = req.query;
 
-    if (!chatId) {
-        return next(ApiError.badRequest("Не указан chatId"));
+        if (!chatId) {
+            return next(ApiError.badRequest("Не указан chatId"));
+        }
+
+        try {
+            const chat = await Chat.findByPk(chatId);
+            if (!chat) return next(ApiError.notFound("Чат не найден"));
+
+            const chatMessagesId = chat.chatMessagesId;
+
+            if (!chatMessagesId || chatMessagesId.length === 0) return res.json({ messages: [] });
+
+            const messages = await ChatMessage.findAll({where: {id: {[Op.in]: chatMessagesId}}});
+
+            return res.json({messages});
+        } catch (error) {
+            console.error("Ошибка при получении сообщений чата:", error);
+            return next(ApiError.internal("Не удалось получить сообщения чата"));
+        }
     }
-
-    try {
-        const chat = await Chat.findByPk(chatId);
-        if (!chat) return next(ApiError.notFound("Чат не найден"));
-
-        const chatMessagesId = chat.chatMessagesId;
-
-        if (!chatMessagesId || chatMessagesId.length === 0) return res.json({ messages: [] });
-
-        const messages = await ChatMessage.findAll({where: {id: {[Op.in]: chatMessagesId}}});
-
-        return res.json({messages});
-    } catch (error) {
-        console.error("Ошибка при получении сообщений чата:", error);
-        return next(ApiError.internal("Не удалось получить сообщения чата"));
-    }
-}
 
 }
 
