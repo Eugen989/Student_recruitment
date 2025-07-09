@@ -4,26 +4,13 @@ import {ResumeCard} from "../../features/resume/components/ResumeCard.tsx";
 import {FilterTags} from "../../features/search/components/FilterTags.tsx";
 import {Pagination} from "../../shared/components/Pagination/Pagination.tsx";
 import {useMemo, useState} from "react";
+import {tagsData} from "../../tempData/tempData.client.ts";
 
 export const HomePage = () => {
     useTitle("HomePage");
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5;
-
-    const tagsData = [
-        "Frontend developer",
-        "Backend developer",
-        "Software engineer",
-        "DevOps engineer",
-        "ML engineer",
-        "Fullstack developer",
-        "Mobile developer",
-        "QA engineer",
-        "Data scientist",
-        "Data analytics",
-        "Design",
-    ];
 
     const tempArray = Array.from({length: 8}, (_, index) => index + 1);
 
@@ -56,7 +43,7 @@ export const HomePage = () => {
                 <div className="max-w-[820px] w-full flex flex-col gap-2.5">
                     <h2 className="text-3xl font-semibold">Список резюме по запросу “Frontend developer...”</h2>
                     <div className="flex flex-col gap-7.5 mb-8">
-                        {currentItems.map((item) => <ResumeCard key={item}/>)}
+                        {currentItems.map((item) => <ResumeCard adaptability="xl" key={item}/>)}
                     </div>
                     <div className="flex justify-center">
                         <Pagination

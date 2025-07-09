@@ -19,7 +19,7 @@ export const Nav = ({orientation, links}: NavProps) => {
         },
         {
             name: "Резюме",
-            path: "/vacancies",
+            path: "/search",
         }
 
     ];

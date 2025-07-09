@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState, type WheelEvent as ReactWheelEvent} from "react";
-import type {Tag} from "../../../features/resume/components/ResumeCard.tsx";
+import type {Adaptability, Tag} from "../../../features/resume/components/ResumeCard.tsx";
 
-export const SliderTags = ({tags}: {tags: Tag[]}) => {
+export const SliderTags = ({tags, adaptability}: {tags: Tag[], adaptability: Adaptability}) => {
     const [translateX, setTranslateX] = useState(0);
     const sliderRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -43,7 +43,7 @@ export const SliderTags = ({tags}: {tags: Tag[]}) => {
     return (
         <div
             ref={containerRef}
-            className="w-[460px] overflow-hidden"
+            className={`${adaptability == "xl"? "max-w-[460px]" : "max-w-[300px]"} overflow-hidden`}
             onWheel={handleSliderWheel}
             onMouseEnter={() => isOverSlider.current = true}
             onMouseLeave={() => isOverSlider.current = false}

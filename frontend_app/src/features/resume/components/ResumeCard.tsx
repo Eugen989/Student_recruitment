@@ -1,46 +1,49 @@
 import {useState} from "react";
 import {Link} from "react-router-dom";
 import {SliderTags} from "../../../shared/components/SliderTags/SliderTags.tsx";
+import {sliderTagsData} from "../../../tempData/tempData.client.ts";
 
 export interface Tag {
     id: number;
     name: string;
 }
 
-export const ResumeCard = () => {
-    const [tags, setTags] = useState<Tag[]>([
-        {id: 1, name: "Frontend developer"},
-        {id: 2, name: "Mobile developer"},
-        {id: 3, name: "QA engineer"},
-        {id: 4, name: "Backend developer"},
-        {id: 5, name: "DevOps engineer"},
-    ]);
+export type Adaptability = "xl" | "lg" | "sm";
+
+export interface ResumeCardProps {
+    adaptability: Adaptability
+}
+
+export const ResumeCard = ({adaptability}: ResumeCardProps) => {
+    const [tags, setTags] = useState<Tag[]>(sliderTagsData);
 
 
     return (
         <Link
-            to="/resume/1"
-            className="
-            flex flex-col gap-2.5
-            max-w-[820px] w-full
-            bg-white-10
-            rounded-2xl border border-gray-20
-            p-5
-            hover:shadow-card
-            transition duration-300 ease-in-out"
+            to="/resume"
+            className={`
+                flex flex-col gap-2.5
+                ${adaptability == "xl" ? "max-w-[820px]" : adaptability == "lg" ? "max-w-[460px]" : "max-w-[340px]"} w-full
+                bg-white-10
+                rounded-2xl border border-gray-20
+                p-5
+                hover:shadow-card
+                transition duration-300 ease-in-out`}
         >
             <div className="flex items-center gap-5">
-                <div className="max-w-25 w-full max-h-25 h-full">
-                    <img src="./tempCardPhoto.png" alt="Картинка" className="w-full h-full object-cover"/>
-                </div>
+                {adaptability !== "sm" && (
+                    <div className="max-w-25 w-full max-h-25 h-full">
+                        <img src="./tempCardPhoto.png" alt="Картинка" className="w-full h-full object-cover"/>
+                    </div>
+                )}
                 <div className="flex flex-col gap-1">
                     <h3 className="text-2xl font-semibold">Анатолий Полено</h3>
                     <span className="text-xl font-semibold">
-                        Желаемая должность:
+                        {adaptability == "xl"? "Желаемая должность:" : ""}
                         <span className="text-gray-10"> Frontend-разработчик</span>
                     </span>
                     <div>
-                        <SliderTags tags={tags}/>
+                        <SliderTags adaptability={adaptability} tags={tags}/>
                     </div>
                 </div>
             </div>
