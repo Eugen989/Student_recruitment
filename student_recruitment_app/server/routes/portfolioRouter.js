@@ -20,6 +20,8 @@ router.get("/getAllProjectsById", protfolioController.getAllProjectsById);
 
 router.post("/postMailMassage", protfolioController.postMailMassage);
 
+router.get("/getPortfolioCard", protfolioController.getPortfolioCard);
+
 router.get("/", (req, res) => res.json({message: "You connected to portfolio"}));
 
 module.exports = router;
