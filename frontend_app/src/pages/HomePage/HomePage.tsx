@@ -14,7 +14,6 @@ export const HomePage = () => {
 
     const tempArray = Array.from({length: 8}, (_, index) => index + 1);
 
-    // Рассчитываем данные для пагинации
     const { currentItems, totalPages } = useMemo(() => {
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
@@ -28,7 +27,6 @@ export const HomePage = () => {
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
-        // Прокрутка к верху списка при смене страницы
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
 

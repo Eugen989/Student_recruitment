@@ -5,7 +5,7 @@ import type {
 } from "react";
 import type { UseFormRegister, RegisterOptions } from "react-hook-form";
 
-type InputTypeAttributes = "text" | "password" | "email";
+type InputTypeAttributes = "text" | "password" | "email" | "number";
 
 interface BaseInputAuthProps
     extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {

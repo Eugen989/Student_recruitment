@@ -1,15 +1,19 @@
 import {useEffect, useRef, useState, type WheelEvent as ReactWheelEvent} from "react";
-import type {Adaptability, Tag} from "../../../features/resume/components/ResumeCard.tsx";
+import {ResumeCard} from "../../../features/resume/components/ResumeCard.tsx";
 
-export const SliderTags = ({tags, adaptability}: {tags: Tag[], adaptability: Adaptability}) => {
+type ProjectsSliderProps = {
+    onEditClick: (id: number) => void;
+};
+
+export const ResumeCardSlider = ({onEditClick}: ProjectsSliderProps) => {
     const [translateX, setTranslateX] = useState(0);
     const sliderRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
-    const isOverSlider = useRef(false);
+    const isOverProfileSlider = useRef(false);
 
     useEffect(() => {
         const handleWheel = (e: WheelEvent) => {
-            if (isOverSlider.current) {
+            if (isOverProfileSlider.current) {
                 e.preventDefault();
             }
         };
@@ -22,6 +26,15 @@ export const SliderTags = ({tags, adaptability}: {tags: Tag[], adaptability: Ada
     }, []);
 
     const handleSliderWheel = (e: ReactWheelEvent<HTMLDivElement>) => {
+        // Проверяем, находится ли курсор над вложенным слайдером тегов
+        const target = e.target as HTMLElement;
+        const isInsideTagSlider = target.closest('[data-slider-type="tags"]');
+
+        // Если событие произошло внутри слайдера тегов, не обрабатываем его
+        if (isInsideTagSlider) {
+            return;
+        }
+
         e.preventDefault();
 
         if (!sliderRef.current || !containerRef.current) return;
@@ -41,18 +54,19 @@ export const SliderTags = ({tags, adaptability}: {tags: Tag[], adaptability: Ada
     };
 
     const handleMouseEnter = () => {
-        isOverSlider.current = true;
+        isOverProfileSlider.current = true;
     };
 
     const handleMouseLeave = () => {
-        isOverSlider.current = false;
+        isOverProfileSlider.current = false;
     };
+
+    const tempArray = [1, 2, 3, 4, 5, 6];
 
     return (
         <div
+            className="flex gap-5 mt-1.25 overflow-hidden border border-gray-20 rounded-2xl"
             ref={containerRef}
-            className={`${adaptability == "xl"? "max-w-[460px]" : "max-w-[300px]"} overflow-hidden`}
-            data-slider-type="tags"
             onWheel={handleSliderWheel}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
@@ -62,22 +76,8 @@ export const SliderTags = ({tags, adaptability}: {tags: Tag[], adaptability: Ada
                 className="flex gap-5 transition-transform duration-200"
                 style={{ transform: `translateX(-${translateX}px)` }}
             >
-                {tags.map(tag => (
-                    <span
-                        key={tag.id}
-                        className="
-                                        text-sm
-                                        py-1 px-2
-                                        bg-white-10
-                                        border border-gray-20 rounded-sm
-                                        whitespace-nowrap
-                                        flex-shrink-0
-                                        hover:bg-purple-20 hover:text-white-10
-                                        transition duration-300 ease-in-out
-                                        "
-                    >
-                                        {tag.name}
-                                    </span>
+                {tempArray.map((_, index) => (
+                    <ResumeCard key={index} index={index} onEditClick={onEditClick} adaptability="sm"/>
                 ))}
             </div>
         </div>

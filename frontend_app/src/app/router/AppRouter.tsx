@@ -5,6 +5,8 @@ import {RegisterPage} from "../../pages/RegisterPage/RegisterPage.tsx";
 import {Layout} from "../../layouts/Layout.tsx";
 import {ResumePage} from "../../pages/ResumePage/ResumePage.tsx";
 import {LandingPage} from "../../pages/LandingPage/LandingPage.tsx";
+import {ProfilePage} from "../../pages/ProfilePage/ProfilePage.tsx";
+import {PrivateRoute} from "./PrivateRoute.tsx";
 
 export const AppRouter = () => {
     return (
@@ -15,6 +17,11 @@ export const AppRouter = () => {
                 <Route path="/login" element={<LoginPage/>}/>
                 <Route path="/register" element={<RegisterPage/>}/>
                 <Route path="/resume" element={<ResumePage/>}/>
+                <Route path="/profile" element={
+                    <PrivateRoute>
+                        <ProfilePage/>
+                    </PrivateRoute>
+                }/>
             </Route>
         </Routes>
     );

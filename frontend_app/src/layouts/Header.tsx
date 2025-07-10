@@ -3,8 +3,11 @@ import {Link} from "react-router-dom";
 import {Nav} from "./Nav.tsx";
 import type {LinkItem} from "../shared/types/layoutType.types.ts";
 import {AuthOnlyNav} from "../shared/components/AuthOnlyNav/AuthOnlyNav.tsx";
+import { useUser } from '../shared/hooks/useUser.tsx';
 
 export const Header = ({links}: {links: LinkItem[]}) => {
+    const user = useUser();
+
     return (
         <header className="px-3 py-4 bg-white-10">
             <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
@@ -22,21 +25,23 @@ export const Header = ({links}: {links: LinkItem[]}) => {
                     <Nav orientation="horizontal" links={links}/>
                 </div>
 
-                {/*<Link*/}
-                {/*    to="/login"*/}
-                {/*    className="*/}
-                {/*    px-16 py-2 bg-blue-10*/}
-                {/*    text-white-10 font-bold text-2xl*/}
-                {/*    rounded-2xl*/}
-                {/*    hover:bg-purple-20*/}
-                {/*    active:bg-blue-10 active:scale-95*/}
-                {/*    transition-all duration-300 ease-in-out"*/}
-                {/*>*/}
-                {/*    Войти*/}
-                {/*</Link>*/}
-
-                <AuthOnlyNav/>
+                {user ? (
+                    <AuthOnlyNav login={user.login} />
+                ) : (
+                    <Link
+                        to="/login"
+                        className="
+                            px-16 py-2 bg-blue-10
+                            text-white-10 font-bold text-2xl
+                            rounded-2xl
+                            hover:bg-purple-20
+                            active:bg-blue-10 active:scale-95
+                            transition-all duration-300 ease-in-out"
+                    >
+                        Войти
+                    </Link>
+                )}
             </div>
         </header>
     );
-};
+}

@@ -3,8 +3,11 @@ import type {RequestLoginData, ResponseLoginData} from "../type/typeAuth.types.t
 import {loginUserAPI} from "../api/authAPI.client.ts";
 import {InputAuth} from "../../../shared/components/InputAuth/InputAuth.tsx";
 import {ButtonAuth} from "./ButtonAuth.tsx";
+import {useNavigate} from "react-router-dom";
+import {setToken} from "../../../utils/token.client.ts";
 
 export const LoginForm = () => {
+    const navigate = useNavigate();
     const {
         register,
         formState: {errors},
@@ -15,7 +18,8 @@ export const LoginForm = () => {
         try {
             const response: ResponseLoginData = await loginUserAPI(data);
             if (response.token) {
-                console.log('Успешная авторизация. Токен:', response.token);
+                setToken(response.token, 3600 * 24);
+                navigate('/profile');
             } else if (response.error) {
                 console.error('Ошибка авторизации:', response.error.message);
             }
@@ -26,6 +30,14 @@ export const LoginForm = () => {
 
     return (
         <form onSubmit={handleSubmit(onSubmitApi)} className="flex flex-col gap-4 max-w-[500px] w-full">
+            <InputAuth
+                type="email"
+                placeholder="E-mail"
+                name="email"
+                register={register}
+                registerOptions={{required: {value: true, message: 'Поле обязательно для заполнения'}}}
+                error={errors.email?.message}
+            />
             <InputAuth
                 placeholder="Логин"
                 name="login"

@@ -1,6 +1,6 @@
 import {Link} from "react-router-dom";
 
-export const AuthOnlyNav = () => {
+export const AuthOnlyNav = ({ login }: { login: string }) => {
     return (
         <div className="flex items-center gap-4">
             <div className="relative group cursor-pointer">
@@ -71,8 +71,8 @@ export const AuthOnlyNav = () => {
 
             {/* Профиль пользователя */}
             <div className="flex items-center gap-x-3.5">
-                <div className="text-sm font-medium text-right max-w-20 w-full">
-                    Андрей Васильев
+                <div className="text-sm font-medium text-right max-w-20 w-full truncate">
+                    {login}
                 </div>
                 <div className="w-0.5 h-10 bg-gray-20"></div>
                 <Link to="/profile">

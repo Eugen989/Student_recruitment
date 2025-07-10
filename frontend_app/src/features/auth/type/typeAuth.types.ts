@@ -2,7 +2,7 @@ import type {Role} from "../../../shared/types/typeApp.types.ts";
 import type {ReactNode} from "react";
 
 export interface ApiError {
-    status: number;
+    status?: number;
     message: string;
 }
 
@@ -21,6 +21,7 @@ export interface ResponseRegisterData {
 }
 
 export interface RequestLoginData {
+    email: string;
     login: string;
     password: string;
 }

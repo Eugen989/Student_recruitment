@@ -5,5 +5,4 @@ export interface LinkItem {
 
 export interface NavProps {
     orientation: string;
-    links: LinkItem[];
 }

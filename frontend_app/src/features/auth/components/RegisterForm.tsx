@@ -6,8 +6,11 @@ import type {ApiError, RequestRegisterData, ResponseRegisterData} from "../type/
 import {ToggleRadioInput} from "../../../shared/components/ToggleRadioInput/ToggleRadioInput.tsx";
 import type {Role} from "../../../shared/types/typeApp.types.ts";
 import {ButtonAuth} from "./ButtonAuth.tsx";
+import {useNavigate} from "react-router-dom";
+import {setToken} from "../../../utils/token.client.ts";
 
 export const RegisterForm = () => {
+    const navigate = useNavigate();
     const {
         register,
         formState: {errors},
@@ -23,6 +26,11 @@ export const RegisterForm = () => {
             role: 'student'
         }
     });
+    const [Error, setError] = useState({
+        isError: false,
+        message: '',
+        status: 0
+    });
 
     const [role, setRole] = useState<Role>('student');
 
@@ -34,7 +42,8 @@ export const RegisterForm = () => {
         try {
             const response: ResponseRegisterData = await registerUserAPI(data);
             if (response.token) {
-                console.log('Успешная регистрация. Токен:', response.token);
+                setToken(response.token, 3600 * 24);
+                navigate('/profile');
             } else if (response.error) {
                 console.log('Ошибка регистрации:', response.error.message);
             } else {
@@ -45,7 +54,17 @@ export const RegisterForm = () => {
         } catch (error) {
             const apiError = error as ApiError;
             console.error(`Ошибка запроса: ${apiError.message} (status ${apiError.status})`);
+            setError({
+                isError: true,
+                message: apiError.message,
+                status: apiError.status || 0
+            })
         }
+
+        if (Error.isError) {
+            alert(`Ошибка запроса: ${Error.message} (status ${Error.status})`);
+        }
+
 
     }
 
@@ -116,7 +135,7 @@ export const RegisterForm = () => {
                 <InputAuth
                     register={register}
                     error={errors.fullName?.message}
-                    name="fullName"
+                    name="name"
                     placeholder="Ваше ФИО"
                     registerOptions={{
                         required: 'ФИО обязательно',

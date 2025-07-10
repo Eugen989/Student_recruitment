@@ -2,7 +2,7 @@ import type {NavProps} from "../shared/types/layoutType.types.ts";
 import {Link} from "react-router-dom";
 
 
-export const Nav = ({orientation, links}: NavProps) => {
+export const Nav = ({orientation}: NavProps) => {
 
     const linksMenu = [
         {
