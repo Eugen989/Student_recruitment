@@ -37,7 +37,7 @@ const Portfolio = sequelize.define("portfolio", {
     description: { type: DataTypes.TEXT },
 });
 
-const websiteMail = sequelize.define("websiteMail", {
+const WebsiteMail = sequelize.define("WebsiteMail", {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     firstUserId: { type: DataTypes.INTEGER, references: { model: User, key: 'id' }, allowNull: false },
     secondUserId: { type: DataTypes.INTEGER, references: { model: User, key: 'id' }, allowNull: false },
@@ -45,6 +45,13 @@ const websiteMail = sequelize.define("websiteMail", {
     message: { type: DataTypes.TEXT },
     viewed: {type: DataTypes.BOOLEAN, defaultValue: false},
 });
+
+const ChatMessage = sequelize.define("chatMessage", {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    userId: { type: DataTypes.INTEGER, references: { model: User, key: 'id' }, allowNull: false },
+    message: { type: DataTypes.TEXT },
+    viewed: {type: DataTypes.BOOLEAN, defaultValue: false},
+})
 
 const Chat = sequelize.define("chat", {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
@@ -54,13 +61,6 @@ const Chat = sequelize.define("chat", {
     chatMessagesId: {
         type: DataTypes.ARRAY(DataTypes.INTEGER),
     }
-})
-
-const ChatMessage = sequelize.define("chatMessage", {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    userId: { type: DataTypes.INTEGER, references: { model: User, key: 'id' }, allowNull: false },
-    message: { type: DataTypes.TEXT },
-    viewed: {type: DataTypes.BOOLEAN, defaultValue: false},
 })
 
 
@@ -73,8 +73,8 @@ Teg.belongsToMany(Portfolio, { through: PortfolioTeg });
 Portfolio.belongsToMany(Project, { through: PortfolioProject });
 Project.belongsToMany(Portfolio, { through: PortfolioProject });
 
-websiteMail.belongsTo(User, { foreignKey: 'firstUserId', as: 'firstUser' });
-websiteMail.belongsTo(User, { foreignKey: 'secondUserId', as: 'secondUser' });
+WebsiteMail.belongsTo(User, { foreignKey: 'firstUserId', as: 'firstUser' });
+WebsiteMail.belongsTo(User, { foreignKey: 'secondUserId', as: 'secondUser' });
 
 Chat.belongsToMany(User, { through: 'ChatUsers', foreignKey: 'chatId' });
 User.belongsToMany(Chat, { through: 'ChatUsers', foreignKey: 'userId' });
@@ -91,7 +91,7 @@ module.exports = {
     Portfolio,
     PortfolioTeg,
     PortfolioProject,
-    websiteMail,
+    WebsiteMail,
     Chat,
     ChatMessage
 }

@@ -3,6 +3,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { User, Portfolio, Teg, Project, PortfolioTeg } = require("../models");
 const { where, Op } = require("sequelize");
+const nodemailer = require("nodemailer");
+
 
 class PortfolioController {
     async createPortfolio(req, res, next) {
@@ -74,7 +76,7 @@ class PortfolioController {
     }
 
     async getAllPortfolio(req, res, next) {
-        const { min_salary, max_salary, tegs } = req.body;
+        const { min_salary, max_salary, tegs, name, id } = req.body;
         let { limit, page } = req.body;
 
         limit = limit || 9;
@@ -89,6 +91,8 @@ class PortfolioController {
 
         if (tegs && tegs.length > 0) whereConditions.tegs_id = {[Op.overlap]: tegs};
 
+        if (name) whereConditions.name = {[Op.overlap]: name};
+
         console.log("Условия запроса:", whereConditions);
 
         try {
@@ -100,14 +104,23 @@ class PortfolioController {
         }
     }
 
+    async getOnePortfolio(req, res, next) {
+        const {id} = req.body;
+
+        if (!id) {
+            return next(ApiError.badRequest("Не указан ID портфолио для удаления"));
+        }
+        const portfolio = await Portfolio.findOne({ where: id });
+
+        return res.json({portfolio});
+    }
+
 
     async createTeg(req, res, next) {
         const {name} = req.body;
         if(!name) return ApiError.badRequest("Укажите название тега");
         const teg = await Teg.create({name});
         
-        console.log("all worked in addTeg");
-
         return res.json({teg});
     }
 
@@ -168,9 +181,9 @@ class PortfolioController {
     async createProject(req, res, next) {
         const {name, description, images, link} = req.body;
         if(!name) return ApiError.badRequest("Не все поля заполнены");
-        const teg = await Project.create({name, description, images, link});
+        const proj = await Project.create({name, description, images, link});
 
-        return res.json({teg});
+        return res.json({proj});
     }
 
 
@@ -222,20 +235,60 @@ class PortfolioController {
 
 
     async getAllProjects(req, res, next) {
-        let {limit, page} = req.body;
+        let {name, limit, page} = req.body;
 
         limit = limit || 4;
         page = page || 1;
         const offset = (page - 1) * limit;
 
         try {
-            const projects = await Project.findAll({ limit, offset });
+            const projects = await Project.findAll({name, limit, offset });
             return res.json(projects);
         } catch (error) {
             console.error("Ошибка при получении проектов:", error);
             return next(ApiError.internal("Не удалось получить проекты"));
         }
     }
+
+    async postMailMassage(req, res, next) {
+        const { userId, title, message } = req.body;
+
+        if (!userId || !title || !message) {
+            return next(ApiError.badRequest("Все поля (userId, title, message) должны быть заполнены"));
+        }
+
+        try {
+            const user = await User.findByPk(userId);
+            if (!user) {
+                return next(ApiError.notFound("Пользователь не найден"));
+            }
+
+            const transporter = nodemailer.createTransport({
+                service: "gmail",
+                auth: {
+                    user: process.env.MY_MAIL_LOGIN, // Ваш email
+                    pass: process.env.MY_MAIL_PASSWORD, // Ваш пароль
+                },
+            });
+
+            const mailOptions = {
+                from: "your-email@example.com", // От кого
+                to: user.email, // Кому
+                subject: title, // Тема письма
+                text: message, // Текст письма
+            };
+
+            await transporter.sendMail(mailOptions);
+            return res.json({ message: "Письмо успешно отправлено" });
+
+        } catch (error) {
+            console.error("Ошибка при отправке письма:", error);
+            return next(ApiError.internal("Не удалось отправить письмо"));
+        }
+    }
+
+    
+
 
 }
 

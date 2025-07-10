@@ -5,14 +5,19 @@ const checkRoleMiddleware = require("../middleware/checkRoleMiddleware");
 
 router.post("/createPortfolio", protfolioController.createPortfolio);
 router.post("/updatePortfolio", checkRoleMiddleware("student"), protfolioController.updatePortfolio);
-router.get("/pages", protfolioController.getAllPortfolio);
+router.post("/deletePortfolio", protfolioController.deletePortfolio);
+router.get("/getAllPortfolio", protfolioController.getAllPortfolio);
+router.get("/getOnePortfolio", protfolioController.getOnePortfolio);
 
 router.post("/createTeg", protfolioController.createTeg);
+router.get("/getAllTegs", protfolioController.getAllTegs);
 router.get("/getAllTegs", protfolioController.getAllTegs);
 
 router.post("/createProject", protfolioController.createProject);
 router.post("/updateProject", protfolioController.updateProject);
 router.post("/getAllProjects", protfolioController.getAllProjects);
+
+router.post("/postMailMassage", protfolioController.postMailMassage);
 
 router.get("/", (req, res) => res.json({message: "You connected to portfolio"}));
 

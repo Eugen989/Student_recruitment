@@ -1,5 +1,5 @@
 const ApiError = require("../error/ApiError");
-const { User, websiteMail, Chat, ChatMessage } = require("../models");
+const { User, WebsiteMail, Chat, ChatMessage } = require("../models");
 const { Op } = require("sequelize");
 
 class ChatController {
@@ -11,7 +11,7 @@ class ChatController {
         }
 
         try {
-            const mail = await websiteMail.create({firstUserId, secondUserId, title, message});
+            const mail = await WebsiteMail.create({firstUserId, secondUserId, title, message});
             return res.json({ mail });
         } catch (error) {
             console.error("Ошибка при создании websiteMail-письма:", error);
@@ -27,10 +27,10 @@ class ChatController {
         }
 
         try {
-            const mail = await websiteMail.findByPk(id);
+            const mail = await WebsiteMail.findByPk(id);
             if (!mail) return next(ApiError.notFound("WebsiteMail-письмо не найдено"));
 
-            await websiteMail.update({title, message, viewed}, {where: {id}});
+            await WebsiteMail.update({title, message, viewed}, {where: {id}});
             return res.json({message: "Email-письмо обновлено"});
         } catch (error) {
             console.error("Ошибка при обновлении email-письма:", error);
@@ -40,7 +40,7 @@ class ChatController {
 
     async getAllWebsiteMails(req, res, next) {
         try {
-            const mails = await websiteMail.findAll();
+            const mails = await WebsiteMail.findAll();
             return res.json({mails});
         } catch (error) {
             console.error("Ошибка при получении email-писем:", error);
