@@ -6,6 +6,8 @@ router.post("/createWebsiteMail", chatController.createWebsiteMail);
 router.post("/updateWebsiteMail", chatController.updateWebsiteMail);
 router.get("/getAllWebsiteMails", chatController.getAllWebsiteMails);
 
+router.get("/getPortfolioCard", chatController.getPortfolioCard);
+
 router.post("/createChat", chatController.createChat);
 router.post("/updateChat", chatController.updateChat);
 router.get("/getAllChats", chatController.getAllChats);

@@ -1,5 +1,5 @@
 const ApiError = require("../error/ApiError");
-const { User, WebsiteMail, Chat, ChatMessage } = require("../models");
+const { User, WebsiteMail, Chat, ChatMessage, Portfolio, Teg } = require("../models");
 const { Op } = require("sequelize");
 
 class ChatController {
@@ -71,6 +71,35 @@ class ChatController {
         }
     }
 
+    // само портфолио данного пользователя
+    // имена teg данного портфолио
+    // данные user карты
+    // количество проектов
+    async getPortfolioCard(req, res, next) {
+        let {limit, page} = req.body;
+
+        limit = limit || 9;
+        page = page || 1;
+        const offset = (page - 1) * limit;
+
+        let whereConditions = {};
+
+        const portfolios = await Portfolio.findAll();
+        const users = [];
+        const tegs = [];
+
+        for (let i = 0; i < portfolios.length; i++) {
+            tegs[i] = [];
+            for (let j = 0; j < portfolios[i].tegs_id.length; j++) {
+                let teg = await Teg.findOne({where: {id: portfolios[i].tegs_id[j]}});
+                tegs[i][j] = teg.name;
+            }
+
+            users.push(await User.findOne({where: {id: portfolios[i].userId}}));
+        }
+
+        return res.json({portfolios, users, tegs});
+    }
 
     async createChat(req, res, next) {
         const { usersID } = req.body;
