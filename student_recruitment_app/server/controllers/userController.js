@@ -1,6 +1,8 @@
 const ApiError = require("../error/ApiError");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const uuid = require("uuid");
+const path = require("path");
 const { User } = require("../models");
 
 const generateJWT = (id, name, email, login, role) => {
@@ -36,6 +38,16 @@ class UserController {
         if(!comparePassword) return next(ApiError.internal("Указан неверный пароль"));
 
         const token = generateJWT(user.id, user.email, user.login, user.role)
+
+        return res.json({token});
+    }
+
+    async update(req, res, next) {
+        const {id, email, login, password, image} = req.body;
+
+        const userObj = await User.update({email, login, password}, {where: {id}});
+
+        const token = generateJWT(userObj.id, userObj.email, userObj.login);
 
         return res.json({token});
     }
