@@ -76,7 +76,7 @@ class PortfolioController {
     }
 
     async getAllPortfolio(req, res, next) {
-        const { min_salary, max_salary, tegs, name, id } = req.body;
+        const {id, userId, min_salary, max_salary, tegs, name } = req.body;
         let { limit, page } = req.body;
 
         limit = limit || 9;
@@ -85,9 +85,13 @@ class PortfolioController {
 
         let whereConditions = {};
 
-        if (min_salary) whereConditions.salary = {[Op.gte]: min_salary};
+        if (id) whereConditions.id = {[Op.overlap]: id};
 
-        if (max_salary) whereConditions.salary = {...whereConditions.salary, [Op.lte]: max_salary};
+        if (userId) whereConditions.userId = {[Op.overlap]: userId};
+
+        if (min_salary) whereConditions.min_salary = {[Op.gte]: min_salary};
+
+        if (max_salary) whereConditions.max_salary = {...whereConditions.salary, [Op.lte]: max_salary};
 
         if (tegs && tegs.length > 0) whereConditions.tegs_id = {[Op.overlap]: tegs};
 
@@ -235,19 +239,28 @@ class PortfolioController {
 
 
     async getAllProjects(req, res, next) {
-        let {name, limit, page} = req.body;
+        let {id, name, limit, page} = req.body;
 
         limit = limit || 4;
         page = page || 1;
         const offset = (page - 1) * limit;
 
         try {
-            const projects = await Project.findAll({name, limit, offset });
+            const projects = await Project.findAll({id, name, limit, offset });
             return res.json(projects);
         } catch (error) {
             console.error("Ошибка при получении проектов:", error);
             return next(ApiError.internal("Не удалось получить проекты"));
         }
+    }
+    
+    async getAllProjectsById(req, res, next) {
+        let {ids} = req.body;
+
+        let projects = [];
+        for (let i = 0; i < ids.length; i++) projects.push(await Project.findAll({id: ids[i]}));
+
+        return res.json(projects);
     }
 
     async postMailMassage(req, res, next) {
