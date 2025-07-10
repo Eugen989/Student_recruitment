@@ -7,7 +7,7 @@ export const Nav = ({orientation}: NavProps) => {
     const linksMenu = [
         {
             name: "О проекте",
-            path: "/",
+            path: "/about",
         },
         {
             name: "Контакты",

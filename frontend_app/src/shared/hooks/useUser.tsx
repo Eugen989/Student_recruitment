@@ -1,8 +1,13 @@
 import { useEffect, useState } from 'react';
 import {isTokenValid, getUserFromToken, TOKEN_CHANGE_EVENT} from '../../utils/token.client';
 
+type User = {
+    login: string;
+    role: string;
+} | null;
+
 export const useUser = () => {
-    const [user, setUser] = useState<{ login: string } | null>(() => {
+    const [user, setUser] = useState<User>(() => {
         if (isTokenValid()) {
             return getUserFromToken();
         }
@@ -12,17 +17,13 @@ export const useUser = () => {
     useEffect(() => {
         const updateUser = () => {
             if (isTokenValid()) {
-                const userData = getUserFromToken();
-                setUser(userData);
+                setUser(getUserFromToken());
             } else {
                 setUser(null);
             }
         };
 
-        // Обновляем при монтировании
         updateUser();
-
-        // Подписываемся на события изменения токена
         window.addEventListener(TOKEN_CHANGE_EVENT, updateUser);
 
         return () => {

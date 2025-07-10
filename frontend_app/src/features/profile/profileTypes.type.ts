@@ -27,6 +27,14 @@ export interface EditProfile {
     password: string;
 }
 
-export interface RequestGetUserData {
+export interface ResponseGetUserData {
     id: number;
+}
+
+export interface ResponseGetResumes {
+    id: number;
+}
+
+export interface ResponseGetProjects {
+    id: number[];
 }

@@ -1,8 +1,8 @@
-import {useState} from "react";
 import {Link} from "react-router-dom";
 import {SliderTags} from "../../../shared/components/SliderTags/SliderTags.tsx";
-import {sliderTagsData} from "../../../tempData/tempData.client.ts";
 import type {MouseEvent} from "react";
+import {isTokenValid} from "../../../utils/token.client.ts";
+import {useUser} from "../../../shared/hooks/useUser.tsx";
 
 export interface Tag {
     id: number;
@@ -13,17 +13,35 @@ export type Adaptability = "xl" | "lg" | "sm";
 
 export interface ResumeCardProps {
     adaptability: Adaptability,
-    onEditClick: (index: number) => void,
-    index: number
+    onEditClick?: (id: number) => void,
+    id: number,
+    userName: string,
+    salary: number,
+    description: string,
+    tags: string[],
+    projectCount: number,
+    imageUrl?: string | null,
 }
 
-export const ResumeCard = ({adaptability, onEditClick, index}: ResumeCardProps) => {
-    const [tags, setTags] = useState<Tag[]>(sliderTagsData);
+export const ResumeCard = ({
+                               adaptability,
+                               onEditClick,
+                               id,
+                               userName,
+                               salary,
+                               description,
+                               tags,
+                               projectCount,
+                               imageUrl
+                           }: ResumeCardProps) => {
+    const user = useUser();
+    const role = user?.role;
+    const isToken = isTokenValid();
 
     const handleEditClick = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         e.stopPropagation();
-        onEditClick(index);
+        //onEditClick(index);
     };
 
     const handleDeleteClick = (e: MouseEvent<HTMLButtonElement>) => {
@@ -35,7 +53,7 @@ export const ResumeCard = ({adaptability, onEditClick, index}: ResumeCardProps) 
 
     return (
         <Link
-            to="/resume"
+            to={`/resume/${id}`}
             className={`
             flex flex-col gap-2.5
             ${adaptability == "xl" ? "max-w-[820px]" : adaptability == "lg" ? "max-w-[460px]" : "max-w-[340px]"} w-full
@@ -49,16 +67,20 @@ export const ResumeCard = ({adaptability, onEditClick, index}: ResumeCardProps) 
             <div className="flex items-center gap-5">
                 {adaptability !== "sm" && (
                     <div className="max-w-25 w-full max-h-25 h-full">
-                        <img src="./tempCardPhoto.png" alt="Картинка" className="w-full h-full object-cover"/>
+                        {imageUrl ? (
+                            <img src={imageUrl} alt="Аватар" className="w-full h-full object-cover rounded-full"/>
+                        ) : (
+                            <div className="bg-gray-200 border-2 border-dashed rounded-full w-full h-full flex items-center justify-center">
+                                <span className="text-gray-400 text-xs">No photo</span>
+                            </div>
+                        )}
                     </div>
                 )}
                 <div className="flex flex-col gap-1">
                     {adaptability !== "sm" && (
-                        <h3 className="text-3xl font-semibold">Анатолий Полено</h3>
+                        <h3 className="text-3xl font-semibold">{userName}</h3>
                     )}
                     <span className="flex items-center justify-between text-xl font-semibold">
-                        {adaptability == "xl"? "Желаемая должность:" : ""}
-                        <span className={`${adaptability !== "sm" ? "text-gray-10" : ""}`}> Frontend-разработчик</span>
                         {adaptability === "sm" && (
                             <div className="flex items-center gap-2.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-in-out">
                                 <button onClick={handleEditClick}>
@@ -83,23 +105,26 @@ export const ResumeCard = ({adaptability, onEditClick, index}: ResumeCardProps) 
                         )}
                     </span>
                     <div>
-                        <SliderTags adaptability={adaptability} tags={tags}/>
+                        <SliderTags adaptability={adaptability} tags={tags.map((tag, index) => ({ id: index, name: tag }))}/>
+                        <div className="mt-1 text-sm text-gray-500">
+                            Проектов: {projectCount}
+                        </div>
                     </div>
                 </div>
             </div>
             <div className="flex flex-col gap-1.25 max-w-2xl w-full">
                 <span className="text-xl font-semibold">
-                    от 80000 р./ мес.
+                    от {salary.toLocaleString('ru-RU')} р./мес.
                 </span>
-                <p className="">
-                    Имею коммерческий опыт разработки приложений на React + Next.js.
-                    Также имею опыт разработки Unit - тестов для мобильный приложений.
-                </p>
+                <p>{description}</p>
             </div>
             {adaptability !== "sm" && (
-                <div className="flex gap-5">
-                    <button
-                        className="
+                <div>
+                    {isToken && (
+                        role === "employer" && (
+                            <span className="flex gap-5">
+                                <button
+                                    className="
                     py-1.5
                     bg-blue-10
                     text-white-10
@@ -123,6 +148,9 @@ export const ResumeCard = ({adaptability, onEditClick, index}: ResumeCardProps) 
                     >
                         Написать
                     </Link>
+                            </span>
+                        )
+                    )}
                 </div>
             )}
         </Link>

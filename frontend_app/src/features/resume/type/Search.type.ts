@@ -14,7 +14,28 @@ export interface RequestResumeSearch {
     name: string | null;
 }
 
-export interface ResponseResumeSearch {
-    resumes: Resume[];
+export interface BackendResume {
+    id: number;
+    userId: number;
+    salary: number;
+    description: string;
+    createdAt: string;
+    updatedAt: string;
+    user: {
+        id: number;
+        name: string;
+        email: string;
+        role: string;
+        image: string | null;
+    };
+    tegs: string[];
+    projectCount: number;
 }
+
+export interface Tags {
+    id: number;
+    name: string;
+}
+
+
 

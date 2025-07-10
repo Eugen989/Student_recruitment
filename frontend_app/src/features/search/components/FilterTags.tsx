@@ -1,9 +1,12 @@
-export const FilterTags = ({tags}: {tags: string[]}) => {
+import type {Tags} from "../../resume/type/Search.type.ts";
+
+export const FilterTags = ({tags}: {tags: Tags[]}) => {
+
     return (
         <div className="max-w-85 w-full flex flex-wrap gap-2.5">
-            {tags.map((tag, index) => (
+            {tags.map(tag => (
                 <div
-                    key={index}
+                    key={tag.id}
                     className="
                         w-full
                         pr-5
@@ -25,7 +28,7 @@ export const FilterTags = ({tags}: {tags: string[]}) => {
                     bg-blue-10
                     group-hover:bg-purple-20
                     transition duration-300 ease-in-out"></span>
-                    <span className="py-3 transition duration-300 ease-in-out">{tag}</span>
+                    <span className="py-3 transition duration-300 ease-in-out">{tag.name}</span>
                 </div>
             ))}
         </div>

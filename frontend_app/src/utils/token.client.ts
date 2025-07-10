@@ -27,7 +27,7 @@ export const clearToken = () => {
     dispatchTokenChange();
 };
 
-export const getUserFromToken = (): { login: string } | null => {
+export const getUserFromToken = (): { login: string; role: string } | null => {
     const token = getToken();
     if (!token) return null;
 
@@ -36,8 +36,10 @@ export const getUserFromToken = (): { login: string } | null => {
 
     try {
         const decoded = JSON.parse(atob(payload));
-        console.log(decoded);
-        return { login: decoded.email };
+        return {
+            login: decoded.login,
+            role: decoded.role
+        };
     } catch (e) {
         return null;
     }
