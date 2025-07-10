@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const uuid = require("uuid");
 const path = require("path");
-const { User } = require("../models");
+const { User, Portfolio, Teg, Project } = require("../models");
 
 const generateJWT = (id, name, email, login, role) => {
     return jwt.sign({id, name, email, login, role}, process.env.SECRET_KEY, {expiresIn: "24h"})
@@ -91,6 +91,30 @@ class UserController {
 
         return res.json({candidate})
     }
+
+    async getUserProfile(req, res, next) {
+        const { id } = req.body;
+
+        try {
+            const candidate = await User.findOne({ where: { id } });
+            if (!candidate) return next(ApiError.notFound("Пользователь не найден"));
+
+            const portfolios = await Portfolio.findAll({ where: { userId: id } });
+
+            const tegsIds = portfolios.flatMap(portfolio => portfolio.tegs_id || []);
+            const projectsIds = portfolios.flatMap(portfolio => portfolio.projects_id || []);
+
+            const tegs = await Teg.findAll({ where: { id: tegsIds } });
+
+            const projects = await Project.findAll({ where: { id: projectsIds } });
+
+            return res.json({ user: candidate, tegs: tegs.map(teg => teg.name), projects });
+        } catch (error) {
+            console.error(error);
+            return next(ApiError.internal("Не удалось получить данные профиля пользователя"));
+        }
+    }
+
 }
 
 module.exports = new UserController()

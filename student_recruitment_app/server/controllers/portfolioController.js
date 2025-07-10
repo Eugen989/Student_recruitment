@@ -352,34 +352,44 @@ class PortfolioController {
     // данные user карты
     // количество проектов
     async getPortfolioCard(req, res, next) {
-        let {limit, page} = req.body;
-
-        limit = limit || 9;
-        page = page || 1;
-        const offset = (page - 1) * limit;
-
-        let whereConditions = {};
-
-        const portfolios = await Portfolio.findAll();
-        const users = [];
-        const tegs = [];
-
         try {
-            for (let i = 0; i < portfolios.length; i++) {
-                tegs[i] = [];
-                for (let j = 0; j < portfolios[i].tegs_id.length; j++) {
-                    let teg = await Teg.findOne({where: {id: portfolios[i].tegs_id[j]}});
-                    tegs[i][j] = teg.name;
-                }
+            const portfolios = await Portfolio.findAll();
+            
+            const userIds = portfolios.map(p => p.userId);
+            const tegIds = [...new Set(portfolios.flatMap(p => p.tegs_id || []))];
 
-                users.push(await User.findOne({where: {id: portfolios[i].userId}}));
-            }
+            const users = await User.findAll({ 
+                where: { id: userIds } 
+            });
+            const tegs = await Teg.findAll({ 
+                where: { id: tegIds } 
+            });
+
+            const userMap = users.reduce((acc, user) => {
+                acc[user.id] = user;
+                return acc;
+            }, {});
+
+            const tegMap = tegs.reduce((acc, teg) => {
+                acc[teg.id] = teg.name;
+                return acc;
+            }, {});
+
+            const tegsArray = portfolios.map(portfolio => 
+                (portfolio.tegs_id || []).map(id => tegMap[id]).filter(Boolean)
+            );
+
+            const usersArray = portfolios.map(portfolio => userMap[portfolio.userId]);
+
+            return res.json({
+                portfolios,
+                users: usersArray,
+                tegs: tegsArray
+            });
         } catch (error) {
-            console.error("Ошибка при отправке карты портфолио:", error);
-            return next(ApiError.internal("Не удалось отправить карту портфолио"));
+            console.error("Ошибка при получении карточек портфолио:", error);
+            return next(ApiError.internal("Не удалось получить карточки портфолио"));
         }
-
-        return res.json({portfolios, users, tegs});
     }
 
 }
