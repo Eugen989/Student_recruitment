@@ -364,14 +364,19 @@ class PortfolioController {
         const users = [];
         const tegs = [];
 
-        for (let i = 0; i < portfolios.length; i++) {
-            tegs[i] = [];
-            for (let j = 0; j < portfolios[i].tegs_id.length; j++) {
-                let teg = await Teg.findOne({where: {id: portfolios[i].tegs_id[j]}});
-                tegs[i][j] = teg.name;
-            }
+        try {
+            for (let i = 0; i < portfolios.length; i++) {
+                tegs[i] = [];
+                for (let j = 0; j < portfolios[i].tegs_id.length; j++) {
+                    let teg = await Teg.findOne({where: {id: portfolios[i].tegs_id[j]}});
+                    tegs[i][j] = teg.name;
+                }
 
-            users.push(await User.findOne({where: {id: portfolios[i].userId}}));
+                users.push(await User.findOne({where: {id: portfolios[i].userId}}));
+            }
+        } catch (error) {
+            console.error("Ошибка при отправке карты портфолио:", error);
+            return next(ApiError.internal("Не удалось отправить карту портфолио"));
         }
 
         return res.json({portfolios, users, tegs});
