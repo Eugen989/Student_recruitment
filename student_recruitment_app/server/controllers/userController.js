@@ -30,24 +30,33 @@ class UserController {
     }
 
     async login(req, res, next) {
-        const {email, login, password} = req.body;
+        const {name, email, login, password} = req.body;
         let user = await User.findOne({where: {email, login}})
         if(!user) return next(ApiError.internal("Пользователь не найден"));
 
         let comparePassword = bcrypt.compareSync(password, user.password);
         if(!comparePassword) return next(ApiError.internal("Указан неверный пароль"));
 
-        const token = generateJWT(user.id, user.email, user.login, user.role)
+        const token = generateJWT(user.id, name, user.email, user.login, user.role)
 
         return res.json({token});
     }
 
     async update(req, res, next) {
-        const {id, email, login, password, image} = req.body;
+        const {id, name, email, login, password} = req.body;
+        const {image} = req.files;
+        try {
+            if(image) {
+                let fileName = uuid.v4() + ".jpg";
+                image.mv(path.resolve(__dirname, "..", "static", fileName));
+            }
+        } catch (e) {
+            return next(ApiError.internal("Не получилось дрбавить картинку"));
+        }
 
-        const userObj = await User.update({email, login, password}, {where: {id}});
+        const userObj = await User.update({name, email, login, password, image}, {where: {id}});
 
-        const token = generateJWT(userObj.id, userObj.email, userObj.login);
+        const token = generateJWT(userObj.id, userObj.email, userObj.login, userObj.image);
 
         return res.json({token});
     }
@@ -63,14 +72,14 @@ class UserController {
     }
 
     async check(req, res, next) {
-        const {email, login, password} = req.body;
+        const {name, email, login, password} = req.body;
         let user = await User.findOne({where: {email, login}})
         if(!user) return next(ApiError.notFound("Пользователь не найден"));
 
         let comparePassword = bcrypt.compareSync(password, user.password);
         if(!comparePassword) return next(ApiError.unauthorized("Указан неверный пароль"));
 
-        const token = generateJWT(user.id, user.email, user.login, user.role)
+        const token = generateJWT(user.id, name, user.email, user.login, user.role)
 
         return res.json({token});
     }

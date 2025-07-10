@@ -38,10 +38,33 @@ class ChatController {
         }
     }
 
-    async getAllWebsiteMails(req, res, next) {
+    async getAllWebsiteMails(req, res, next) {      
+        const {id, firstUserId, secondUserId, title, message, viewed} = req.body;
+        let {limit, page} = req.body;
+
+        limit = limit || 9;
+        page = page || 1;
+        const offset = (page - 1) * limit;
+
+        let whereConditions = {};
+
+        if (id) whereConditions.id = {[Op.overlap]: id};
+
+        if (firstUserId) whereConditions.firstUserId = {[Op.overlap]: firstUserId};
+
+        if (secondUserId) whereConditions.secondUserId = {[Op.overlap]: secondUserId};
+
+        if (title) whereConditions.title = {[Op.overlap]: title};
+
+        if (message) whereConditions.message = {[Op.overlap]: message};
+
+        if (viewed) whereConditions.viewed = {[Op.overlap]: viewed};
+
+        console.log("Условия запроса:", whereConditions);
+        
         try {
-            const mails = await WebsiteMail.findAll();
-            return res.json({mails});
+            const mails = await WebsiteMail.findAll({ where: whereConditions, limit, offset });
+            return res.json(mails);
         } catch (error) {
             console.error("Ошибка при получении email-писем:", error);
             return next(ApiError.internal("Не удалось получить websiteMail-письма"));
@@ -83,9 +106,22 @@ class ChatController {
     }
 
     async getAllChats(req, res, next) {
+        const {id} = req.body;
+        let {limit, page} = req.body;
+
+        limit = limit || 9;
+        page = page || 1;
+        const offset = (page - 1) * limit;
+
+        let whereConditions = {};
+
+        if (id) whereConditions.id = {[Op.overlap]: id};
+
+        console.log("Условия запроса:", whereConditions);
+        
         try {
-            const chats = await Chat.findAll();
-            return res.json({chats});
+            const chats = await Chat.findAll({ where: whereConditions, limit, offset });
+            return res.json(chats);
         } catch (error) {
             console.error("Ошибка при получении чатов:", error);
             return next(ApiError.internal("Не удалось получить чаты"));
@@ -140,26 +176,31 @@ class ChatController {
     }
 
     async getAllChatMessages(req, res, next) {
-        const {chatId} = req.query;
+        const {id, userId, message, viewed} = req.body;
+        let {limit, page} = req.body;
 
-        if (!chatId) {
-            return next(ApiError.badRequest("Не указан chatId"));
-        }
+        limit = limit || 9;
+        page = page || 1;
+        const offset = (page - 1) * limit;
 
+        let whereConditions = {};
+
+        if (id) whereConditions.id = {[Op.overlap]: id};
+
+        if (userId) whereConditions.userId = {[Op.overlap]: userId};
+
+        if (message) whereConditions.message = {[Op.overlap]: message};
+
+        if (viewed) whereConditions.viewed = {[Op.overlap]: viewed};
+
+        console.log("Условия запроса:", whereConditions);
+        
         try {
-            const chat = await Chat.findByPk(chatId);
-            if (!chat) return next(ApiError.notFound("Чат не найден"));
-
-            const chatMessagesId = chat.chatMessagesId;
-
-            if (!chatMessagesId || chatMessagesId.length === 0) return res.json({ messages: [] });
-
-            const messages = await ChatMessage.findAll({where: {id: {[Op.in]: chatMessagesId}}});
-
-            return res.json({messages});
+            const chats = await Chat.findAll({ where: whereConditions, limit, offset });
+            return res.json(chats);
         } catch (error) {
-            console.error("Ошибка при получении сообщений чата:", error);
-            return next(ApiError.internal("Не удалось получить сообщения чата"));
+            console.error("Ошибка при получении сообщений чатов:", error);
+            return next(ApiError.internal("Не удалось сообщения чатов"));
         }
     }
 

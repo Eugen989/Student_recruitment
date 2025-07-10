@@ -174,18 +174,53 @@ class PortfolioController {
         }
     }
 
-
     async getAllTegs(req, res, next) {
-        const tegs = await Teg.findAll();
+        const {id, name} = req.body;
+        let { limit, page } = req.body;
 
-        return res.json({tegs});
+        limit = limit || 9;
+        page = page || 1;
+        const offset = (page - 1) * limit;
+
+        let whereConditions = {};
+
+        if (id) whereConditions.id = {[Op.overlap]: id};
+
+        if (name) whereConditions.name = {[Op.overlap]: name};
+
+        console.log("Условия запроса:", whereConditions);
+        
+        try {
+            const tegs = await Teg.findAll({ where: whereConditions, limit, offset });
+            return res.json(tegs);
+        } catch (error) {
+            console.error("Ошибка при получении тегов:", error);
+            return next(ApiError.internal("Не удалось теги"));
+        }
     }
 
 
     async createProject(req, res, next) {
-        const {name, description, images, link} = req.body;
+        const {name, description, link} = req.body;
+        const {images} = req.files;
+        let fileNames = [];
+
         if(!name) return ApiError.badRequest("Не все поля заполнены");
-        const proj = await Project.create({name, description, images, link});
+
+        if(images) {
+            try {
+                for (let i = 0; i < images.length; i++) {
+                    fileNames.push(uuid.v4() + ".jpg");
+                    images[i].mv(path.resolve(__dirname, "..", "static", fileNames[i]));
+                }
+            } catch (error) {
+                console.error("Ошибка при удалении тега:", error);
+                next(ApiError.internal("Не получить список картинок"));
+            }
+        }
+            
+
+        const proj = await Project.create({name, description, images: fileNames, link});
 
         return res.json({proj});
     }
@@ -239,14 +274,26 @@ class PortfolioController {
 
 
     async getAllProjects(req, res, next) {
-        let {id, name, limit, page} = req.body;
+        let {id, name, description, link, limit, page} = req.body;
 
         limit = limit || 4;
         page = page || 1;
         const offset = (page - 1) * limit;
 
+        let whereConditions = {};
+
+        if (id) whereConditions.id = {[Op.overlap]: id};
+
+        if (name) whereConditions.name = {[Op.overlap]: name};
+
+        if (description) whereConditions.description = {[Op.overlap]: description};
+
+        if (link) whereConditions.link = {[Op.overlap]: link};
+
+        console.log("Условия запроса:", whereConditions);
+
         try {
-            const projects = await Project.findAll({id, name, limit, offset });
+            const projects = await Project.findAll({where: {whereConditions, limit, offset}});
             return res.json(projects);
         } catch (error) {
             console.error("Ошибка при получении проектов:", error);
@@ -264,9 +311,9 @@ class PortfolioController {
     }
 
     async postMailMassage(req, res, next) {
-        const { userId, title, message } = req.body;
+        const { userId, message } = req.body;
 
-        if (!userId || !title || !message) {
+        if (!userId || !message) {
             return next(ApiError.badRequest("Все поля (userId, title, message) должны быть заполнены"));
         }
 
@@ -279,15 +326,15 @@ class PortfolioController {
             const transporter = nodemailer.createTransport({
                 service: "gmail",
                 auth: {
-                    user: process.env.MY_MAIL_LOGIN, // Ваш email
-                    pass: process.env.MY_MAIL_PASSWORD, // Ваш пароль
+                    user: process.env.MY_MAIL_LOGIN, // email
+                    pass: process.env.MY_MAIL_PASSWORD, // пароль
                 },
             });
 
             const mailOptions = {
                 from: "your-email@example.com", // От кого
                 to: user.email, // Кому
-                subject: title, // Тема письма
+                subject: "Вам пришёл ответ от работодателя", // Тема письма
                 text: message, // Текст письма
             };
 

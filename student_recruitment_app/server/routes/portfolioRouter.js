@@ -10,12 +10,13 @@ router.get("/getAllPortfolio", protfolioController.getAllPortfolio);
 router.get("/getOnePortfolio", protfolioController.getOnePortfolio);
 
 router.post("/createTeg", protfolioController.createTeg);
-router.get("/getAllTegs", protfolioController.getAllTegs);
+router.get("/updateTeg", protfolioController.updateTeg);
 router.get("/getAllTegs", protfolioController.getAllTegs);
 
 router.post("/createProject", protfolioController.createProject);
 router.post("/updateProject", protfolioController.updateProject);
 router.post("/getAllProjects", protfolioController.getAllProjects);
+router.get("/getAllProjectsById", protfolioController.getAllProjectsById);
 
 router.post("/postMailMassage", protfolioController.postMailMassage);
 
