@@ -1,7 +1,7 @@
 import {useTitle} from "../../shared/hooks/useTitle.tsx";
 
 export const PageNotFound = () => {
-    useTitle("ErrorPage");
+    useTitle("Страница не найдена");
 
     return (
         <>

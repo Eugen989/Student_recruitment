@@ -8,7 +8,7 @@ import {getAllResumeAPI, getAllTagsAPI} from "../../features/resume/api/searchAP
 import type {BackendResume, Tags} from "../../features/resume/type/Search.type.ts";
 
 export const HomePage = () => {
-    useTitle("HomePage");
+    useTitle("C");
     const [resumes, setResumes] = useState<BackendResume[]>([]);
     const [allTags, setAllTags] = useState<Tags[]>([]);
 
