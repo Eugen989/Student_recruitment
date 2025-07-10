@@ -78,9 +78,9 @@ class UserController {
     async getOne(req, res, next) {
         const {id} = req.body;
 
-        candidate = await User.findOne({where: {email}});
+        candidate = await User.findOne({where: {id}});
 
-        const token = generateJWT(candidate.id, candidate.name, candidate.email, candidate.login, candidate.role);
+        return res.json({candidate})
     }
 }
 
