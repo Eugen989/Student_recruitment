@@ -1,11 +1,10 @@
 import logo from "../assets/logotype.png";
 import {Link} from "react-router-dom";
 import {Nav} from "./Nav.tsx";
-import type {LinkItem} from "../shared/types/layoutType.types.ts";
 import {AuthOnlyNav} from "../shared/components/AuthOnlyNav/AuthOnlyNav.tsx";
 import { useUser } from '../shared/hooks/useUser.tsx';
 
-export const Header = ({links}: {links: LinkItem[]}) => {
+export const Header = () => {
     const user = useUser();
 
     return (
@@ -22,7 +21,7 @@ export const Header = ({links}: {links: LinkItem[]}) => {
                         </div>
                     </Link>
 
-                    <Nav orientation="horizontal" links={links}/>
+                    <Nav orientation="horizontal"/>
                 </div>
 
                 {user ? (

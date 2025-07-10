@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 
 // Типы для TypeScript
-type Role = 'student' | 'employer' | 'other';
+export type Role = 'student' | 'employer' | 'other';
 interface Contact {
     name: string;
     role: Role;

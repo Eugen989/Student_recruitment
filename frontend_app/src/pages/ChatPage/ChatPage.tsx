@@ -1,9 +1,9 @@
-import {Chat, type Message} from "../../features/Chat.tsx";
+import {Chat, type Message, type Role} from "../../features/Chat.tsx";
 
 export const ChatPage = () => {
     const contact = {
         name: "Иван Петров",
-        role: 'student',
+        role: 'student' as Role, // Явное указание типа
         avatarUrl: "https://example.com/avatar.jpg",
     };
 

@@ -77,7 +77,7 @@ export const ResumeCardSlider = ({onEditClick}: ProjectsSliderProps) => {
                 style={{ transform: `translateX(-${translateX}px)` }}
             >
                 {tempArray.map((_, index) => (
-                    <ResumeCard key={index} index={index} onEditClick={onEditClick} adaptability="sm"/>
+                    <ResumeCard imageUrl="./tempCardPhoto.png" projectCount={5} tags={["React", "TypeScript"]} description="Frontend-разработчик с опытом работы 2 года" salary={100000} userName="Иван Иванов" id={index} key={index} onEditClick={onEditClick} adaptability="sm"/>
                 ))}
             </div>
         </div>

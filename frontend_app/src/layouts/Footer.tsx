@@ -7,7 +7,7 @@ export const Footer = () => {
             <div className="container mx-auto px-4 flex justify-between relative">
                 <div className="flex flex-col gap-2.5">
                     <span className="font-bold text-xl">Меню</span>
-                    <Nav links={[]} orientation="vertical"/>
+                    <Nav orientation="vertical"/>
                 </div>
                 <div className="max-w-36 w-full absolute top-0 left-1/2 -translate-x-1/2">
                     <img src={logo} alt="логотип" className="block object-cover"/>

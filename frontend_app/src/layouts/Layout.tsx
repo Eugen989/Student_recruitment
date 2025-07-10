@@ -12,7 +12,7 @@ export const Layout = () => {
 
     return (
         <>
-            <Header links={[]}/>
+            <Header/>
             <main className="container mx-auto py-25 px-4 bg-white-20 grow">
                 <Outlet/>
             </main>

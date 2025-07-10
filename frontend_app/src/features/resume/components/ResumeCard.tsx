@@ -25,7 +25,6 @@ export interface ResumeCardProps {
 
 export const ResumeCard = ({
                                adaptability,
-                               onEditClick,
                                id,
                                userName,
                                salary,

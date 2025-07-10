@@ -44,7 +44,7 @@ export const HomePage = () => {
 
     const tempArray = Array.from({length: 8}, (_, index) => index + 1);
 
-    const { currentItems, totalPages } = useMemo(() => {
+    const { totalPages } = useMemo(() => {
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         const slicedItems = tempArray.slice(startIndex, endIndex);

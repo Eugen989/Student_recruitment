@@ -6,7 +6,56 @@ import {ResumeCard} from "./ResumeCard.tsx";
 
 export const ResumeFull = () => {
 
-    const tempArray = Array.from({length: 5}, (_, index) => index + 1);
+    // Создаем временные данные для пропсов ResumeCard
+    const tempResumeData = [
+        {
+            id: 1,
+            userName: "Иван Иванов",
+            salary: 80000,
+            description: "Frontend-разработчик с опытом работы 2 года",
+            tags: ["React", "TypeScript"],
+            projectCount: 5,
+            imageUrl: "./tempCardPhoto.png"
+        },
+        {
+            id: 2,
+            userName: "Петр Петров",
+            salary: 90000,
+            description: "Fullstack разработчик",
+            tags: ["Node.js", "Express"],
+            projectCount: 3,
+            imageUrl: null
+        },
+        {
+            id: 3,
+            userName: "Мария Сидорова",
+            salary: 75000,
+            description: "UX/UI дизайнер",
+            tags: ["Figma", "Adobe XD"],
+            projectCount: 7,
+            imageUrl: "./user3.png"
+        },
+        {
+            id: 4,
+            userName: "Алексей Смирнов",
+            salary: 100000,
+            description: "DevOps инженер",
+            tags: ["Docker", "Kubernetes"],
+            projectCount: 4,
+            imageUrl: null
+        },
+        {
+            id: 5,
+            userName: "Екатерина Кузнецова",
+            salary: 85000,
+            description: "Мобильный разработчик",
+            tags: ["React Native", "Flutter"],
+            projectCount: 6,
+            imageUrl: "./user5.jpg"
+        }
+    ];
+
+
 
     return (
         <div className="flex justify-between">
@@ -67,8 +116,8 @@ export const ResumeFull = () => {
             <div>
                 <h3 className="text-3xl font-semibold">Похожие резюме</h3>
                 <div className="flex flex-col gap-5 mt-2.5">
-                    {tempArray.map((item) => (
-                        <ResumeCard key={item} adaptability="lg"/>
+                    {tempResumeData.map((item) => (
+                        <ResumeCard key={item.id} {...item} adaptability="lg"/>
                     ))}
                 </div>
             </div>
