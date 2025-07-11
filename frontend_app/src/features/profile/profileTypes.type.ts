@@ -27,14 +27,26 @@ export interface EditProfile {
     password: string;
 }
 
-export interface ResponseGetUserData {
-    id: number;
-}
-
-export interface ResponseGetResumes {
-    id: number;
-}
-
-export interface ResponseGetProjects {
-    id: number[];
+export interface ResponseProfile {
+    user: {
+        id: number;
+        name: string;
+        email: string;
+        login: string;
+        role: string;
+        image: string | null;
+    },
+    resumes: {
+        id: number;
+        salary: number;
+        tegs: string[];
+        projects: {
+            id: number;
+            title: string;
+            description: string;
+            link: string;
+        }[];
+        description: string;
+        countProjects?: number
+    }[]
 }

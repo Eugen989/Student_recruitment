@@ -24,7 +24,7 @@ export const LandingPage = () => {
                             <p className="font-[Manrope] text-[32px]">
                                 <span className="font-bold">С</span>ервис<br/>
                                 <span className="font-bold">О</span>нлайн<br/>
-                                <span className="font-bold">Р</span>екрутмента<br/>
+                                <span className="font-bold">Р</span>екрутинга<br/>
                                 <span className="font-bold">С</span>тудентов<br/>
                                 <span className="font-bold">it.bgitu</span>
                             </p>

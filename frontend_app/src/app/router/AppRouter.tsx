@@ -7,7 +7,7 @@ import {ResumePage} from "../../pages/ResumePage/ResumePage.tsx";
 import {LandingPage} from "../../pages/LandingPage/LandingPage.tsx";
 import {ProfilePage} from "../../pages/ProfilePage/ProfilePage.tsx";
 import {PrivateRoute} from "./PrivateRoute.tsx";
-import {ChatPage} from "../../pages/ChatPage/ChatPage.tsx";
+import ChatPage from "../../pages/ChatPage/ChatPage.tsx";
 import {PageNotFound} from "../../pages/PageNotFound/PageNotFound.tsx";
 
 export const AppRouter = () => {

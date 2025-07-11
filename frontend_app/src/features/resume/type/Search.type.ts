@@ -37,5 +37,32 @@ export interface Tags {
     name: string;
 }
 
+export interface RequestResumeId {
+    id: number;
+}
+
+export interface Projects {
+    id: number;
+    title: string;
+    description: string;
+    link: string;
+    image: string[] | null;
+}
+
+export interface UserResume {
+    id: number;
+    name: string;
+    image: string | null;
+}
+
+export interface ResponseResumeId {
+    id: number;
+    user: UserResume;
+    salary: number;
+    tegs: Tags[];
+    projects: Projects[];
+    description: string;
+}
+
 
 

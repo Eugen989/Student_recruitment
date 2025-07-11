@@ -9,7 +9,8 @@ import {AddResumeModal} from "../../../shared/components/modal/AddResumeModal.ts
 import {EditResumeModal} from "../../../shared/components/modal/EditResumeModal.tsx";
 import {EditProfileModal} from "../../../shared/components/modal/EditProfileModal.tsx";
 import {useNavigate} from "react-router-dom";
-import {clearToken} from "../../../utils/token.client.ts";
+import {clearToken, isTokenValid} from "../../../utils/token.client.ts";
+import {useUser} from "../../../shared/hooks/useUser.tsx";
 
 type ModalsState = {
     addProject: boolean;
@@ -28,6 +29,10 @@ export const Profile = () => {
         editResume: false,
         editProfile: false
     });
+
+    const user = useUser();
+    const role = user?.role;
+    const isToken = isTokenValid();
 
     const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
     const [selectedResumeId, setSelectedResumeId] = useState<number | null>(null);
@@ -143,36 +148,30 @@ export const Profile = () => {
                             </ButtonProfile>
                         </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-y-1.25 gap-x-5">
+                    <div className="grid grid-cols-1 gap-y-1.25 gap-x-5">
                         <span className="text-xl font-semibold">
-                            Фамилия:
-                            <span className="text-gray-10"> Полено</span>
+                            ФИО:
+                            <span className="text-gray-10"> Анатолий</span>
                         </span>
                         <span className="text-xl font-semibold">
                             Контакты:
                             <span className="text-gray-10"> fanta1998@gmail.com</span>
                         </span>
                         <span className="text-xl font-semibold">
-                            Имя:
-                            <span className="text-gray-10"> Анатолий</span>
-                        </span>
-                        <span className="text-xl font-semibold">
                             Статус:
                             <span className="text-gray-10"> Студент</span>
                         </span>
-                        <span className="text-xl font-semibold">
-                            Отчество:
-                            <span className="text-gray-10"> Васильевич</span>
-                        </span>
                     </div>
-                    <div className="flex gap-5 mt-5">
-                        <ButtonProfile onClick={() => openModal('addResume')}>
-                            Создать резюме
-                        </ButtonProfile>
-                        <ButtonProfile onClick={() => openModal('addProject')}>
-                            Добавить проект
-                        </ButtonProfile>
-                    </div>
+                    {isToken && role !== 'employer' && (
+                        <div className="flex gap-5 mt-5">
+                            <ButtonProfile onClick={() => openModal('addResume')}>
+                                Создать резюме
+                            </ButtonProfile>
+                            <ButtonProfile onClick={() => openModal('addProject')}>
+                                Добавить проект
+                            </ButtonProfile>
+                        </div>
+                    )}
                 </div>
             </div>
             <div className="mt-7.5">

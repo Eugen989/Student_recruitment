@@ -61,7 +61,7 @@ export const ResumeCardSlider = ({onEditClick}: ProjectsSliderProps) => {
         isOverProfileSlider.current = false;
     };
 
-    const tempArray = [1, 2, 3, 4, 5, 6];
+    const tempArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
     return (
         <div

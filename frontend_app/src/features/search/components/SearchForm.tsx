@@ -1,19 +1,23 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
+import type {Tags} from "../../resume/type/Search.type.ts";
+import type {RequestSearchResume} from "../type/searchType.types.ts";
 
-export const SearchForm = () => {
-    const [specializations, setSpecializations] = useState([
-        { id: 1, name: "Frontend developer", checked: false },
-        { id: 2, name: "Backend developer", checked: false },
-        { id: 3, name: "Software engineer", checked: false },
-        { id: 4, name: "DevOps engineer", checked: false },
-        { id: 5, name: "ML engineer", checked: false },
-    ]);
+export const SearchForm = ({ tags, onSubmit }: {
+    tags: Tags[];
+    onSubmit: (params: RequestSearchResume) => void
+}) => {
+    const [searchInput, setSearchInput] = useState("");
+    const [tagList, setTagList] = useState<Array<Tags & { checked: boolean }>>([]);
     const [value, setValue] = useState(50000);
     const [isOpenAdvancedSearch, setIsOpenAdvancedSearch] = useState(false);
 
+    useEffect(() => {
+        setTagList(tags.map(tag => ({ ...tag, checked: false })));
+    }, [tags]);
+
     const handleCheck = (id: number) => {
-        setSpecializations((prev) =>
-            prev.map((item) =>
+        setTagList(prev =>
+            prev.map(item =>
                 item.id === id ? { ...item, checked: !item.checked } : item
             )
         );
@@ -23,12 +27,31 @@ export const SearchForm = () => {
         setIsOpenAdvancedSearch(!isOpenAdvancedSearch);
     };
 
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const params: RequestSearchResume = {
+            name: searchInput,
+            minSalary: 0,
+            maxSalary: value,
+            // Преобразуем массив тегов в строку с ID через запятую
+            tags: tagList
+                .filter(tag => tag.checked)
+                .map(tag => tag.id)
+                .join(',')
+        };
+
+        onSubmit(params);
+    };
+
     return (
-        <form className="container mx-auto">
+        <form className="container mx-auto" onSubmit={handleSubmit}>
             <div className="flex items-start gap-5">
                 <div className="flex-1 relative z-10">
                     <input
                         type="search"
+                        value={searchInput}
+                        onChange={(e) => setSearchInput(e.target.value)}
                         placeholder="Поиск по ФИО, тегам, и чему-то там ещё..."
                         className="
                     w-full
@@ -53,40 +76,35 @@ export const SearchForm = () => {
                                 По специализации
                             </span>
                                 <ul>
-                                    {specializations.map((spec) => (
-                                        <li key={spec.id}>
+                                    {tagList.map((tag) => (
+                                        <li key={tag.id}>
                                             <label className="flex items-center cursor-pointer">
                                                 <div
-                                                    className={`
-                                                    w-5 h-5 
+                                                    className={`w-5 h-5 
                                                     border rounded 
                                                     flex items-center justify-center
                                                     transition duration-200
-                                                    ${
-                                                        spec.checked
-                                                            ? 'bg-blue-10 border-blue-10'
-                                                            : 'bg-white-10 border-gray-10'
-                                                    }
-                                                `}
+                                                    ${tag.checked
+                                                        ? 'bg-blue-10 border-blue-10'
+                                                        : 'bg-white-10 border-gray-10'
+                                                    }`}
                                                 >
-                                                    {spec.checked && (
+                                                    {tag.checked && (
                                                         <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                             <path d="M8.65136 0.469656C8.94411 0.00141883 9.56198 -0.140406 10.0303 0.152274C10.4984 0.445029 10.6412 1.06197 10.3486 1.5302L5.34667 9.53118L4.63281 10.6738L3.74609 9.65911L0.247063 5.65911C-0.116378 5.24339 -0.0738709 4.61055 0.34179 4.247C0.757427 3.8839 1.38942 3.92639 1.75292 4.34173L4.36425 7.32903L8.65136 0.469656Z" fill="white"/>
                                                         </svg>
-
-
                                                     )}
                                                 </div>
                                                 <input
                                                     type="checkbox"
                                                     className="sr-only"
-                                                    checked={spec.checked}
+                                                    checked={tag.checked}
                                                     name="specialization"
-                                                    value={spec.id}
-                                                    onChange={() => handleCheck(spec.id)}
+                                                    value={tag.id}
+                                                    onChange={() => handleCheck(tag.id)}
                                                 />
 
-                                                <span className="ml-2">{spec.name}</span>
+                                                <span className="ml-2">{tag.name}</span>
                                             </label>
                                         </li>
                                     ))}
@@ -101,16 +119,14 @@ export const SearchForm = () => {
                                     <span>
                                         {new Intl.NumberFormat('ru-RU').format(value)}р.
                                     </span>
-                                        <span>100000р.</span>
+                                        <span>{new Intl.NumberFormat('ru-RU').format(1000000)}р.</span>
                                     </div>
                                     <input
                                         type="range"
                                         min="0"
                                         max="100000"
                                         value={value}
-                                        onChange={(e) => (
-                                            setValue(Number(e.target.value))
-                                        )}
+                                        onChange={(e) => (setValue(Number(e.target.value)))}
                                         className="w-full"
                                     />
                                 </label>
@@ -120,11 +136,7 @@ export const SearchForm = () => {
                 </div>
                 <button
                     type="button"
-                    className="
-                        cursor-pointer
-                        bg-white-10
-                        rounded-2xl
-                    "
+                    className="cursor-pointer bg-white-10 rounded-2xl"
                     onClick={handleClickAdvancedSearch}
                 >
                     <svg
@@ -133,10 +145,7 @@ export const SearchForm = () => {
                         viewBox="0 0 50 50"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
-                        className="
-                        fill-blue-10
-                        hover:fill-purple-20
-                        transition duration-300 ease-in-out"
+                        className="fill-blue-10 hover:fill-purple-20 transition duration-300 ease-in-out"
                     >
                         <path
                             d="M35 0C43.2843 3.22129e-07 50 6.71573 50 15V35C50 43.2843 43.2843
@@ -160,10 +169,7 @@ export const SearchForm = () => {
                         viewBox="0 0 50 50"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
-                        className="
-                        fill-blue-10
-                        hover:fill-purple-20
-                        transition duration-300 ease-in-out"
+                        className="fill-blue-10 hover:fill-purple-20 transition duration-300 ease-in-out"
                     >
                         <path
                             d="M35 0C43.2843 3.22129e-07 50 6.71573 50 15V35C50 43.2843 43.2843

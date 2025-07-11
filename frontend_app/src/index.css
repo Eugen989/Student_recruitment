@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 @theme {
-    --color-*: initial;
     --color-white-10: #ffffff;
     --color-white-20: #E0E5FF;
     --color-white-30: #EEF1FF;
@@ -14,6 +13,9 @@
     --color-gray-10: #8D8D8D;
     --color-gray-20: #CCCCCC;
     --color-red-10: #FF4545;
+    --color-green-10: #10B981;
+    --color-blue-20: #2c44b0;
+    --color-gray-30: #F3F4F6;
 
     --shadow-auth: 4px 4px 4px 0 var(--color-black-30);
     --shadow-search: 0px 4px 4px 0 var(--color-black-30);

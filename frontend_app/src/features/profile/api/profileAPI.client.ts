@@ -1,5 +1,6 @@
-//import {apiRequest} from "../../../utils/api/configAPI.client.ts";
+import {apiRequest} from "../../../utils/api/configAPI.client.ts";
+import type {ResponseProfile} from "../profileTypes.type.ts";
 
-// export const getProfileByIdAPI = (id: number): Promise<ResponseGetUserData> => {
-//     return apiRequest<number, ResponseGetUserData>(`/user/getProfileById/${id}`, "get");
-// }
+export const getProfileByIdAPI = (id: number): Promise<ResponseProfile> => {
+    return apiRequest<void, ResponseProfile>(`/user/getUserProfile/${id}`, "get");
+}
